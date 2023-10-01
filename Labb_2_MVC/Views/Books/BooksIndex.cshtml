@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Labb2_CallAPI_ASP.Data.Books>
+@{
+	ViewData["Title"] = "BooksIndex";
+}
+<h1>BooksIndex</h1>
+<p>
+	<a asp-action="AddBook" class="btn btn-outline-primary"><i class="fa fa-plus"></i> Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InStock)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Id)</td>
+
+
+                <td>@Html.DisplayFor(modelItem => item.Title)</td>
+
+
+                <td>@Html.DisplayFor(modelItem => item.Author)</td>
+
+
+                <td>@Html.DisplayFor(modelItem => item.Year)</td>
+
+                <td>@Html.DisplayFor(modelItem => item.Description)</td>
+
+                <td>@Html.DisplayFor(modelItem => item.InStock)</td>
+                <td>
+                    <a asp-action="Details" class="btn btn-success" asp-route-id="@item.Id">Details <i class="fa fa-edit"></i></a>
+
+                    <a asp-action="UpdateBook" class="btn btn-warning" asp-route-couponId="@item.Id">
+                        Edit <i class="fa fa-edit"></i>
+                    </a>
+
+                    <a asp-action="DeleteBook" class="btn btn-danger" asp-route-couponId="@item.Id">
+                        Delete <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+
+</table>
