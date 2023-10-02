@@ -27,7 +27,7 @@ namespace Labb_2_MVC.Services
 			return await this.SendAsync<T>(new Models.ApiRequest
 			{
 				ApiType = StaticDetails.ApiType.DELETE,
-				Url = StaticDetails.BookAPIBase + "/api/books"+ id,
+				Url = StaticDetails.BookAPIBase + "/api/books/" + id,
 				AccessToken = ""
 			});
 		}
@@ -47,7 +47,7 @@ namespace Labb_2_MVC.Services
 			return await this.SendAsync<T>(new Models.ApiRequest
 			{
 				ApiType = StaticDetails.ApiType.GET,
-				Url = StaticDetails.BookAPIBase + "/api/books" + id,
+				Url = StaticDetails.BookAPIBase + "/api/books/" + id,
 				AccessToken = ""
 			});
 		}
@@ -58,7 +58,7 @@ namespace Labb_2_MVC.Services
 			{
 				ApiType = StaticDetails.ApiType.PUT,
 				Data = books,
-				Url = StaticDetails.BookAPIBase + "/api/books",
+				Url = StaticDetails.BookAPIBase + "/api/books/" + books.Id,
 				AccessToken = ""
 			});
 		}

@@ -7,7 +7,7 @@ namespace Labb2_CallAPI_ASP.Services
 		Task<IEnumerable<Books>> GetAllAsync();
 		Task<Books>GetBookAsync(int id);
 		Task<Books> CreateBookAsync(Books book);
-		Task<Books> UpdateBook(Books book,int id);
+		Task<Books> UpdateBook(Books book);
 		Task<Books> DeleteBookAsync(int id);
 	}
 }

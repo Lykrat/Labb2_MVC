@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Labb2_CallAPI_ASP.Data.Books>
 @{
-	ViewData["Title"] = "BooksIndex";
+	ViewData["Title"] = "BookIndex";
 }
 <h1>BooksIndex</h1>
 <p>
@@ -50,11 +50,11 @@
                 <td>
                     <a asp-action="Details" class="btn btn-success" asp-route-id="@item.Id">Details <i class="fa fa-edit"></i></a>
 
-                    <a asp-action="UpdateBook" class="btn btn-warning" asp-route-couponId="@item.Id">
+                    <a asp-action="UpdateBook" class="btn btn-warning" asp-route-id="@item.Id">
                         Edit <i class="fa fa-edit"></i>
                     </a>
 
-                    <a asp-action="DeleteBook" class="btn btn-danger" asp-route-couponId="@item.Id">
+                    <a asp-action="DeleteBook" class="btn btn-danger" asp-route-id="@item.Id">
                         Delete <i class="fa fa-trash"></i>
                     </a>
                 </td>

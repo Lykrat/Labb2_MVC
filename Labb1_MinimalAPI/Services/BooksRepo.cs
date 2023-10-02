@@ -20,11 +20,15 @@ namespace Labb2_CallAPI_ASP.Services
 
 		public async Task<Books> DeleteBookAsync(int id)
 		{
-			var book = await _dbContext.Books.FirstOrDefaultAsync();
-			_dbContext.Remove(book);
-			await _dbContext.SaveChangesAsync();
-			return book;
-		}
+            var bookToDelete = await _dbContext.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (bookToDelete == null)
+            {
+                return null;
+            }
+            _dbContext.Books.Remove(bookToDelete);
+            await _dbContext.SaveChangesAsync();
+            return bookToDelete;
+        }
 
 		public async Task<IEnumerable<Books>> GetAllAsync()
 		{
@@ -35,9 +39,9 @@ namespace Labb2_CallAPI_ASP.Services
 		{
 			return await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
 		}
-		public async Task<Books> UpdateBook(Books book, int id)
+		public async Task<Books> UpdateBook(Books book)
 		{
-			var newBook=await _dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
+			var newBook=await _dbContext.Books.FindAsync(book.Id);
 			if(newBook != null)
 			{
 				newBook.Title = book.Title;

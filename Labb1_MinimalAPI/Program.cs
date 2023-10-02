@@ -32,47 +32,93 @@ namespace Labb2_CallAPI_ASP
 
 			app.UseAuthorization();
 
-			app.MapPost("/saveBook", async (IBooksRepo bookRepo, Books book) =>
+			app.MapPost("/api/book", async (IBooksRepo bookRepo, Books book) =>
 			{
 				var result = await bookRepo.CreateBookAsync(book);
 				return Results.Ok(result);
-			});
+			}).WithName("AddBook").Accepts<Books>("application/json").Produces(201).Produces(400);
 
-			app.MapGet("/GetAllBooks",async (IBooksRepo bookRepo) =>
+			app.MapGet("/api/books",async (IBooksRepo bookRepo) =>
 			{
-				var result=await bookRepo.GetAllAsync();
-				return Results.Ok(result);
-			});
-
-			app.MapGet("/GetBookById/{id:int}", async (IBooksRepo bookRepo,int id) =>
-			{
-				var result = await bookRepo.GetBookAsync(id);
-				if(result==null)
+				APIResponse response = new APIResponse
 				{
-					return Results.BadRequest(result);
-				}
-				return Results.Ok(result);
-			});
+					Result = await bookRepo.GetAllAsync(),
+					Success = true,
+					StatusCode = System.Net.HttpStatusCode.OK
+				};
+				return Results.Ok(response);
+				//var result=await bookRepo.GetAllAsync();
+				//return Results.Ok(result);
+			}).WithName("GetAllBooks").Produces(200);
 
-			app.MapPut("/UpdateBook/{id:int}", async (IBooksRepo bookRepo,Books book,int id) =>
+			app.MapGet("/api/books/{id:int}", async (IBooksRepo bookRepo,int id) =>
 			{
-				var result = await bookRepo.UpdateBook(book,id);
+				//var result = await bookRepo.GetBookAsync(id);
+				//if(result==null)
+				//{
+				//	return Results.BadRequest(result);
+				//}
+				//return Results.Ok(result);
+				APIResponse response = new APIResponse();
+				var book=await bookRepo.GetBookAsync(id);
+
+				if (book != null)
+				{
+					response.Result = book;
+					response.Success = true;
+					response.StatusCode= System.Net.HttpStatusCode.OK;
+					return Results.Ok(response);
+				};
+				return Results.NotFound("Could not find book");
+			}).WithName("GetBookById").Produces(200).Produces(400);
+
+			app.MapPut("/api/books/{id:int}", async (IBooksRepo bookRepo,Books book) =>
+			{
+				var result = await bookRepo.UpdateBook(book);
 				if (result == null)
 				{
 					return Results.BadRequest(result);
 				}
 				return Results.Ok(result);
-			});
+				//APIResponse response = new APIResponse
+				//{
+				//	Success = false,
+				//	StatusCode = System.Net.HttpStatusCode.BadRequest
+				//};
+				//var bookUpdate = await bookRepo.UpdateBook(book);
+				//if (bookUpdate != null)
+				//{
+				//	response.Result = bookUpdate;
+				//	response.Success = true;
+				//	response.StatusCode = System.Net.HttpStatusCode.OK;
+				//	return Results.Ok();
+				//}
+				//else
+				//{
+				//	return Results.NotFound("Book was not found");
+				//}
+			}).WithName("UpdateBook").Accepts<Books>("application/json").Produces<APIResponse>(200).Produces(400);
 
-			app.MapDelete("/DeleteBook/{id:int}", async (IBooksRepo bookRepo, int id) =>
+			app.MapDelete("/api/books/{id:int}", async (IBooksRepo bookRepo, int id) =>
 			{
-				var result=await bookRepo.DeleteBookAsync(id);
+				var result = await bookRepo.DeleteBookAsync(id);
 				if (result == null)
 				{
 					return Results.BadRequest(result);
 				}
 				return Results.Ok(result);
-			});
+				//APIResponse response = new APIResponse() { Success = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
+
+				//var bookToDelete = await bookRepo.DeleteBookAsync(id);
+				//if (bookToDelete != null)
+				//{
+				//    response.Result = bookToDelete;
+				//    response.Success = true;
+				//    response.StatusCode = System.Net.HttpStatusCode.NoContent;
+				//    return Results.Ok(response);
+				//}
+				//return Results.NotFound("Unable to find the book");
+			}).WithName("DeleteBook").Produces<APIResponse>(200).Produces(400);
 
 			app.Run();
 		}

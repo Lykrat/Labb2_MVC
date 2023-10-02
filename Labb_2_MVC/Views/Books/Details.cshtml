@@ -1,7 +1,7 @@
 ﻿@model Labb2_CallAPI_ASP.Data.Books
 
 @{
-	ViewData["Title"] = "Details";
+	ViewData["Title"] = "BookDetails";
 }
 <h1>Details</h1>
 
@@ -58,5 +58,8 @@
             @Html.DisplayFor(model => model.InStock)
         </dd>
     </dl>
+</div>
+<div>
+    <a asp-action="BookIndex">Back To List</a>
 </div>
 

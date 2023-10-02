@@ -13,7 +13,7 @@ namespace Labb_2_MVC.Controllers
 		{
 			this._bookService = bookService;
 		}
-		public async Task<IActionResult> BooksIndex()
+		public async Task<IActionResult> BookIndex()
 		{
 			List<Books> list=new List<Books>();
 			var response = await _bookService.GetAllBooks<ResponseDTO>();
@@ -25,7 +25,6 @@ namespace Labb_2_MVC.Controllers
 		}
 		public async Task<IActionResult> Details(int id)
 		{
-			Books bDTO=new Books();
 			var response = await _bookService.GetBookById<ResponseDTO>(id);
 			if(response != null && response.Success)
 			{
@@ -46,7 +45,7 @@ namespace Labb_2_MVC.Controllers
 				var response=await _bookService.AddBookAsync<ResponseDTO>(book);
 				if(response !=null && response.Success)
 				{
-					return RedirectToAction(nameof(BooksIndex));
+					return RedirectToAction(nameof(BookIndex));
 				}
 			}
 			return View(book);
@@ -69,33 +68,45 @@ namespace Labb_2_MVC.Controllers
 				var response= await _bookService.UpdateBookAsync<ResponseDTO>(book);
 				if(response!=null && response.Success)
 				{
-					return RedirectToAction(nameof(BooksIndex));
-				}
+                    return RedirectToAction(nameof(BookIndex));
+                }
 			}
 			return View(book);
 		}
-		public async Task<IActionResult> DeleteBook(int id)
-		{
-			var response = await _bookService.GetBookById<ResponseDTO>(id);
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+
+            var response = await _bookService.GetBookById<ResponseDTO>(id);
+
+            if (response != null && response.Success)
+            {
+                Books book = JsonConvert.DeserializeObject<Books>(Convert.ToString(response.Result));
+                return View(book);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteBook(Books book)
+        {
+            var response = await _bookService.DeleteBookAsync<ResponseDTO>(book.Id);
 			if (response != null && response.Success)
 			{
-				Books book = JsonConvert.DeserializeObject<Books>(Convert.ToString(response.Result));
-				return View(book);
+				return RedirectToAction(nameof(BookIndex));
 			}
-			return NotFound();
-		}
-		[HttpPost]
-		public async Task<IActionResult> DeleteBook(Books book)
-		{
-			if (ModelState.IsValid)
-			{
-				var response = await _bookService.DeleteBookAsync<ResponseDTO>(book.Id);
-				if(response != null && response.Success)
-				{
-					return RedirectToAction(nameof(BooksIndex));
-				}
-			}
-			return NotFound();	
-		}
-	}
+            else
+            {
+                return NotFound();
+            }
+            //if (ModelState.IsValid)
+            //{
+            //    var response = await _bookService.DeleteBookAsync<ResponseDTO>(book.Id);
+            //    if (response != null && response.Success)
+            //    {
+            //        return RedirectToAction(nameof(BookIndex));
+            //    }
+            //}
+        }
+    }
 }
